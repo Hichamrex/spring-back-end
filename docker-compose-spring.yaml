@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  mysql_db:
+    image: mysql
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_DATABASE: 'fullstack'
+    ports:
+      - '3307:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+  spring-app:
+      depends_on:
+        - mysql_db
+      image: ${IMAGE}
+      container_name: spring-app
+      restart: always
+      environment:
+        MYSQL_HOST: mysql_db
+        MYSQL_USER: root
+        MYSQL_PASSWORD: password
+        MYSQL_PORT: 3306
+      ports:
+        - '4000:8080'
+volumes:
+  mysql_data:
