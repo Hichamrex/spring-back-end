@@ -36,8 +36,8 @@ def deployApplication(String imageName) {
     echo "Deploying the application to EC2..."
     def shellCmd = "bash ./server-script-back.sh $imageName"
      withCredentials([usernamePassword(credentialsId: 'azure-vm', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        sh "scp ./server-script-back.sh $USERNAME@20.166.72.53:/home/$USERNAME"
-        sh "scp ./docker-compose-spring.yaml $USERNAME@20.166.72.53:/home/$USERNAME"
+        sh "scp ./server-script-back.sh -o StrictHostKeyChecking=no $USERNAME@20.166.72.53:/home/$USERNAME"
+        sh "scp ./docker-compose-spring.yaml -o StrictHostKeyChecking=no $USERNAME@20.166.72.53:/home/$USERNAME"
         sh "echo $PASSWORD | sshpass --password-stdin ssh -o StrictHostKeyChecking=no $USERNAME@20.166.72.53 ${shellCmd}"
 }
 
