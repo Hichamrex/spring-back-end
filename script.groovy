@@ -33,13 +33,23 @@ def dockerPush(String imageName) {
 }
 
 def deployApplication(String imageName) {
-    echo "Deploying the appication to EC2..."
+    echo "Deploying the application to EC2..."
     def shellCmd = "bash ./server-script-back.sh $imageName"
-    sshagent(['ec2-user-ssh']) {
-        sh "scp ./server-script-back.sh ec2-user@15.188.59.125:/home/ec2-user"
-        sh "scp ./docker-compose-spring.yaml ec2-user@15.188.59.125:/home/ec2-user"
-        sh "ssh -o StrictHostKeyChecking=no ec2-user@15.188.59.125 ${shellCmd}"
+     withCredentials([usernamePassword(credentialsId: 'azure-vm', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+        sh "scp ./server-script-back.sh $username@15.188.59.125:/home/$username"
+        sh "scp ./docker-compose-spring.yaml $username@15.188.59.125:/home/$username"
+        sh "echo $PASSWORD | sshpass --password-stdin ssh -o StrictHostKeyChecking=no $username@15.188.59.125 ${shellCmd}"
     }
 }
+
+// def deployApplication(String imageName) {
+//     echo "Deploying the appication to EC2..."
+//     def shellCmd = "bash ./server-script-back.sh $imageName"
+//     sshagent(['ec2-user-ssh']) {
+//         sh "scp ./server-script-back.sh ec2-user@15.188.59.125:/home/ec2-user"
+//         sh "scp ./docker-compose-spring.yaml ec2-user@15.188.59.125:/home/ec2-user"
+//         sh "ssh -o StrictHostKeyChecking=no ec2-user@15.188.59.125 ${shellCmd}"
+//     }
+// }
 
 return this
