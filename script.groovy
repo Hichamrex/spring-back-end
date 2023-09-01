@@ -47,8 +47,8 @@ def deployApplication(String imageName) {
     echo "Deploying the appication to EC2..."
     def shellCmd = "bash ./server-script-back.sh $imageName"
     sshagent(['jenkins-ssh-private-key']) {
-        sh "scp ./server-script-back.sh azureuser@20.166.72.53:/home/ec2-user"
-        sh "scp ./docker-compose-spring.yaml azureuser@20.166.72.53:/home/ec2-user"
+        sh "scp ./server-script-back.sh azureuser@20.166.72.53:/home/azureuser"
+        sh "scp ./docker-compose-spring.yaml azureuser@20.166.72.53:/home/azureuser"
         sh "ssh -o StrictHostKeyChecking=no azureuser@20.166.72.53 ${shellCmd}"
     }
 }
